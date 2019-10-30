@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <center>
+            <form action="/feed" method="POST" enctype="multipart/form-data">
+                x frame:
+                <input type="file" name="x_frame">
+                <br/>
+                y frame:
+                <input type="file" name="y_frame">
+                <br/>
+                batch size:
+                <input name="batch", value="4", maxlength="5", size="5">
+                <br/>
+                epoch:
+                <input name="epochs", value="1", maxlength="5", size="5">
+                <br/><br/><br/>
+                <button value="upload" type="submit">feed</button>
+            </form>
+            <br/><br/>
+             <form action="/modeFeed" method="POST" enctype="multipart/form-data">
+                <button value="upload" type="submit">to view mode</button>
+            </form>
+        </center>
+    </body>
+</html>
