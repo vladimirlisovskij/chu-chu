@@ -2,64 +2,94 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title>Edit mode</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_style.css') }}">
     </head>
     <body>
-        <center>
-            <form action="/create" method="POST" enctype="multipart/form-data">
-                <select name="layer_type">
-                    <option value="Dense">Dense</option>
-                    <option value="Dropout">Dropout</option>
-                    <option value="Flatten">Flatten</option>
-                    <option value="Conv2D">Conv2D</option>
-                    <option value="MaxPooling2D">MaxPooling2D</option>
-                </select>
-                <input name="neurons", value="128", maxlength="5", size="5">
-                <select name="activation">
-                    <option value="relu">relu</option>
-                    <option value="tanh">tang</option>
-                    <option value="softmax">softmax</option>
-                </select>
-                <button value="upload" type="submit">add layer</button>
-            </form>
-            {% for ind in range(len) %}
-                <form action="/delete/{{ind}}" method="POST" enctype="multipart/form-data">
-                    {{ind}}:
-                    {% if lay[ind]['class_name'] == "Dense" %}
-                        Dense {{lay[ind]['config']["units"]}} {{lay[ind]['config']["activation"]}}
-                    {% endif %}
-                    {% if lay[ind]['class_name'] == "Dropout" %}
-                        Dropout {{lay[ind]['config']["rate"]}}
-                    {% endif %}
-                    {% if lay[ind]['class_name'] == "Conv2D" %}
-                        Conv2D {{lay[ind]['config']["filters"]}} {{lay[ind]['config']["activation"]}}
-                    {% endif %}
-                    {% if lay[ind]['class_name'] == "Flatten" %}
-                        Flatten
-                    {% endif %}
-                    {% if lay[ind]['class_name'] == "MaxPooling2D" %}
-                        MaxPooling2D {{lay[ind]['config']["pool_size"][0]}}
-                    {% endif %}
-                    <button value="upload" type="submit">X</button>
-                </form>
-            {% endfor %}
-            <br/>
-            <form action="/modeEdit" method="POST" enctype="multipart/form-data">
-                input shape<input name="input_shape", value="64">
-                <br/><br/>
-                loss
-                <select name="loss">
-                    <option value="categorical_crossentropy">categorical_crossentropy</option>
-                </select>
-                <br/><br/>
-                optimizer
-                <select name="optimizer">
-                    <option value="Adadelta">Adadelta</option>
-                </select>
-                <br/><br/>
-                <button value="upload" type="submit">to view mode</button>
-                <br/><br/>
-            </form>
-        </center>
+        <div id="main">
+            <h3>codename chu-chu *project name*</h3>
+            <div id="tst">
+                <fieldset id="main_lab">
+                    <legend align="left">Edit mode</legend>
+                    <div id="tst2">
+                        <div id="layers_info">
+                            <h4>layers</h4>
+                            <form action="/create" method="POST" enctype="multipart/form-data">
+                                <select name="layer_type">
+                                    <option value="Dense">Dense</option>
+                                    <option value="Dropout">Dropout</option>
+                                    <option value="Flatten">Flatten</option>
+                                    <option value="Conv2D">Conv2D</option>
+                                    <option value="MaxPooling2D">MaxPooling2D</option>
+                                </select>
+                                <input name="neurons", value="128", size="5">
+                                <select name="activation">
+                                    <option value="relu">relu</option>
+                                    <option value="tanh">tang</option>
+                                    <option value="softmax">softmax</option>
+                                </select>
+                                <button value="upload" type="submit">[add layer]</button>
+                            </form>
+                                <ol>
+                                {% for ind in range(len) %}
+                                    <li>
+                                        <form action="/delete/{{ind}}" method="POST" enctype="multipart/form-data">
+                                            <button value="upload" type="submit">[ X ]</button>
+                                            {% if lay[ind]['class_name'] == "Dense" %}
+                                                Dense {{lay[ind]['config']["units"]}} {{lay[ind]['config']["activation"]}}
+                                            {% endif %}
+                                            {% if lay[ind]['class_name'] == "Dropout" %}
+                                                Dropout {{lay[ind]['config']["rate"]}}
+                                            {% endif %}
+                                            {% if lay[ind]['class_name'] == "Conv2D" %}
+                                                Conv2D {{lay[ind]['config']["filters"]}} {{lay[ind]['config']["activation"]}}
+                                            {% endif %}
+                                            {% if lay[ind]['class_name'] == "Flatten" %}
+                                                Flatten
+                                            {% endif %}
+                                            {% if lay[ind]['class_name'] == "MaxPooling2D" %}
+                                                MaxPooling2D {{lay[ind]['config']["pool_size"][0]}}
+                                            {% endif %}
+                                        </form>
+                                    </li>
+                            {% endfor %}
+                            </ol>
+                        </div>
+                        <div id="model_info">
+                            <h4>params</h4>
+                            <form action="/modeEdit" method="POST" enctype="multipart/form-data">
+                                input shape
+                                <input name="input_shape", value="64", size="10">
+                                <br/>
+                                loss
+                                <select name="loss">
+                                    <option value="categorical_crossentropy">categorical_crossentropy</option>
+                                </select>
+                                <br/>
+                                optimizer
+                                <select name="optimizer">
+                                    <option value="Adadelta">Adadelta</option>
+                                </select>
+                                <br/>
+                                <button value="upload" type="submit">[to view mode]</button>
+                                <br/><br/>
+                            </form>
+                        </div>
+                        <div id="load_model">
+                            <h4>load model</h4>
+                            <form action="/loadModel" method="POST" enctype="multipart/form-data">
+                                <label id="input_file">
+                                    <input type="file" name="load_model">
+                                    [choose file]
+                                </label>
+                                <button value="upload" type="submit">[load model]</button>
+                            </form>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <br/><br/><br/>
+            <div id="copy">&copy Vladimir Lisovskij, 2019 <br/> made with <span id="red"><3</span></div>
+        </div>
     </body>
 </html>

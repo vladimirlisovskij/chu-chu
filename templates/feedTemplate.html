@@ -2,29 +2,50 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title>Feed mode</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/feed_style.css') }}">
     </head>
     <body>
-        <center>
-            <form action="/feed" method="POST" enctype="multipart/form-data">
-                x frame:
-                <input type="file" name="x_frame">
-                <br/>
-                y frame:
-                <input type="file" name="y_frame">
-                <br/>
-                batch size:
-                <input name="batch", value="4", maxlength="5", size="5">
-                <br/>
-                epoch:
-                <input name="epochs", value="1", maxlength="5", size="5">
-                <br/><br/><br/>
-                <button value="upload" type="submit">feed</button>
-            </form>
-            <br/><br/>
-             <form action="/modeFeed" method="POST" enctype="multipart/form-data">
-                <button value="upload" type="submit">to view mode</button>
-            </form>
-        </center>
+        <div id="main">
+            <h3>codename chu-chu *project name*</h3>
+            <div id="tst">
+                <fieldset id="main_lab">
+                    <legend align="left">Edit mode</legend>
+                    <div id="tst2">
+                        <div id="feed_info">
+                            <form action="/feed" method="POST" enctype="multipart/form-data">
+                                x frame:
+<!--                                <label class="input_file">-->
+                                    <input type="file" name="x_frame">
+                                    [choose file]
+<!--                                </label>-->
+                                <br/>
+                                y frame:
+<!--                                <label class="input_file">-->
+                                <input type="file" name="y_frame">
+                                    [choose file]
+<!--                                </label>-->
+                                <br/><br/>
+                                batch size:
+                                <input name="batch", value="4", maxlength="5", size="5">
+                                <br/>
+                                epoch:
+                                <input name="epochs", value="1", maxlength="5", size="5">
+                                <br/>
+                                val size:
+                                <input name="val_size", value="30", maxlength="5", size="5">
+                                <br/>
+                                <button value="upload" type="submit">[feed]</button>
+                            </form>
+                        </div>
+                        <div id = "go_back">
+                             <form action="/modeFeed" method="POST" enctype="multipart/form-data">
+                                <button value="upload" type="submit">[to view mode]</button>
+                            </form>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
     </body>
 </html>

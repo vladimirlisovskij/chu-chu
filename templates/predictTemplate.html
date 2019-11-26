@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title>Predict mode</title>
     </head>
     <body>
         <center>
@@ -10,6 +10,10 @@
                 data:
                 <input type="file" name="data">
                 <button value="upload" type="submit">feed</button>
+            </form>
+            <br/>
+            <form action="/modePredict" method="POST" enctype="multipart/form-data">
+                <button value="upload" type="submit">to view mode</button>
             </form>
         </center>
     </body>

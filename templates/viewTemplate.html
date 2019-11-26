@@ -2,48 +2,67 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title>View mode</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/view_style.css') }}">
     </head>
     <body>
-        <center>
-            {% for ind in range(len) %}
-                {{ind}}:
-                {% if lay[ind]['class_name'] == "Dense" %}
-                    Dense {{lay[ind]['config']["units"]}} {{lay[ind]['config']["activation"]}}
-                {% endif %}
-                {% if lay[ind]['class_name'] == "Dropout" %}
-                    Dropout {{lay[ind]['config']["rate"]}}
-                {% endif %}
-                {% if lay[ind]['class_name'] == "Conv2D" %}
-                    Conv2D {{lay[ind]['config']["filters"]}} {{lay[ind]['config']["activation"]}}
-                {% endif %}
-                {% if lay[ind]['class_name'] == "Flatten" %}
-                    Flatten
-                {% endif %}
-                {% if lay[ind]['class_name'] == "MaxPooling2D" %}
-                    MaxPooling2D {{lay[ind]['config']["pool_size"][0]}}
-                {% endif %}
-                <br/>
-            {% endfor %}
-            <br/>
-            input shape: {{input_shape}}
-            <br/>
-            loss: {{loss}}
-            <br/>
-            optimizer: {{optimizer}}
-            <form action="/modeEdit" method="POST" enctype="multipart/form-data">
-                <button value="upload" type="submit">to edit mode</button>
-            </form>
-            <br/><br/>
-            {% if not fed %}
-                <form action="/modeFeed" method="POST" enctype="multipart/form-data">
-                    <button value="upload" type="submit">to feed mode</button>
-                </form>
-            {% else %}
-                <form action="/modePredict" method="POST" enctype="multipart/form-data">
-                    <button value="upload" type="submit">to predict mode</button>
-                </form>
-            {% endif %}
-        </center>
+        <div id="main">
+            <h3>codename chu-chu *project name*</h3>
+            <div id="tst">
+                <fieldset>
+                    <legend align="left">View mode</legend>
+                    <div id="tst2">
+                        <div id="layers_info">
+                        <h4>layers</h4>
+                        <ol>
+                            {% for layer in layers %}
+                                <li>
+                                    {% if layer['class_name'] == "Dense" %}
+                                        Dense {{layer['config']["units"]}} {{layer['config']["activation"]}}
+                                    {% endif %}
+                                    {% if layer['class_name'] == "Dropout" %}
+                                        Dropout {{layer['config']["rate"]}}
+                                    {% endif %}
+                                    {% if layer['class_name'] == "Conv2D" %}
+                                        Conv2D {{layer['config']["filters"]}} {{layer['config']["activation"]}}
+                                    {% endif %}
+                                    {% if layer['class_name'] == "Flatten" %}
+                                        Flatten
+                                    {% endif %}
+                                    {% if layer['class_name'] == "MaxPooling2D" %}
+                                        MaxPooling2D {{layer['config']["pool_size"][0]}}
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+                        <div id="model_info">
+                        <h4>model params</h4>
+                        input shape: {{input_shape}}
+                        <br/>
+                        loss: {{loss}}
+                        <br/>
+                        optimizer: {{optimizer}}
+                    </div>
+                        <div id="action_buttons">
+                        <form action="/saveModel" method="POST" enctype="multipart/form-data">
+                            <button value="upload" type="submit">[save model]</button>
+                        </form>
+                        <form action="/modeEdit" method="POST" enctype="multipart/form-data">
+                            <button value="upload" type="submit">[to edit mode]</button>
+                        </form>
+                        <form action="/modeFeed" method="POST" enctype="multipart/form-data">
+                            <button value="upload" type="submit">[to feed mode]</button>
+                        </form>
+                        <form action="/modePredict" method="POST" enctype="multipart/form-data">
+                            <button value="upload" type="submit">[to predict mode]</button>
+                        </form>
+                    </div>
+                    </div>
+                </fieldset>
+            </div>
+            <br/><br/><br/>
+            <div id="copy">&copy Vladimir Lisovskij, 2019 <br/> made with <span id="red"><3</span></div>
+        </div>
     </body>
 </html>
