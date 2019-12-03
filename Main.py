@@ -207,6 +207,7 @@ def do_feed():
     socketio.on("connect", namespace="/iter")
     socketio.on("connect", namespace="/epoch")
     socketio.on("connect", namespace="/acc")
+
     for j in range(epochs):
         print(j, "!!!!!!!!!!")
         socketio.emit("progress", {"text": int((j)* per2)}, namespace="/epoch")

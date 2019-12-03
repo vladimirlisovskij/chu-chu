@@ -8,7 +8,7 @@
 <body>
 <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="{{ url_for('static', filename='js/lib/liteChart.js') }}"></script>
+<script src="{{ url_for('static', filename='js/lib/liteChart.min.js') }}"></script>
 <div id="main">
             <h3>codename chu-chu *project name*</h3>
             <div id="tst">
@@ -69,7 +69,7 @@
 
         document.getElementById("go_back").style.display = "none";
 
-        let app = new Vue({
+    let app = new Vue({
         el: "#iter",
         data: {
             progress: 0,
@@ -120,9 +120,9 @@
     if(data.isConnected === true) {
         // Now hide the div.
         document.getElementById("go_back").style.display = "inline-block";
+    }
 
 	// Create liteChart.js Object
-	settings = {};
 	let d = new liteChart("chart", {
 	    axisX: {
 			show: true,
@@ -157,14 +157,10 @@
         // Inject chart into DOM object
         let div = document.getElementById("your-id");
         d.inject(div);
-
         // Draw
         d.draw();
 
-    }
-
     });
-        // document.getElementById("tst").style.display = 'none';
     </script>
 </body>
 </html>

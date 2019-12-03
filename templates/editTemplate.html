@@ -22,7 +22,7 @@
                                     <option value="Conv2D">Conv2D</option>
                                     <option value="MaxPooling2D">MaxPooling2D</option>
                                 </select>
-                                <input name="neurons", value="128", size="5">
+                                <input name="neurons", value="128", size="5", type="number">
                                 <select name="activation">
                                     <option value="relu">relu</option>
                                     <option value="tanh">tang</option>
@@ -59,7 +59,7 @@
                             <h4>params</h4>
                             <form action="/modeEdit" method="POST" enctype="multipart/form-data">
                                 input shape
-                                <input name="input_shape", value="64", size="10">
+                                <input name="input_shape", value="64", size="10", type="number">
                                 <br/>
                                 loss
                                 <select name="loss">
