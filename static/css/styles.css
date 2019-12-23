@@ -1,15 +1,11 @@
-body{
-        background: #0a00b4;
-}
-
-#main{
+.main{
     padding-left: 10%;
     padding-right: 10%;
     padding-top: 2%;
     padding-bottom: 5%;
 }
 
-#tst{
+.main-content{
     padding-left: 1%;
     padding-right: 1%;
     padding-top: 1%;
@@ -18,48 +14,40 @@ body{
     box-shadow: 2em 2em 0 #000000;
 }
 
-#tst2{
+.border{
+    font-size:1em;
+    border: 1px solid #0f00ff;
+}
+
+.border-content{
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
 
-#main_lab {
-    font-size:1em;
-    border: 1px solid #0f00ff;
-}
-button{
-    font-size: 1em;
-    color: white;
-    background-color: Transparent;
-    background-repeat:no-repeat;
-    border: none;
-    cursor:pointer;
-    overflow: hidden;
-    outline:none;
-    margin-bottom: 1em;
-}
-button:hover{
-    background-color: blue;
-}
-
-#feed_info{
+.box{
+    margin: 5%;
     display: flex;
     flex-direction: column;
-    margin-right: 10%;
     color: #0f00ff;
     vertical-align: top;
 }
-#go_back{
-    display: flex;
-    flex-direction: column;
-    vertical-align: top;
+
+.copy{
+    text-align: right;
+    color: white;
+}
+
+.red{
+    color: red;
+    font-weight: bolder;
 }
 
 h4{
     text-align: center;
     color: black;
 }
+
 h3{
     text-align: center;
     color: white;
@@ -76,9 +64,11 @@ select{
     outline:none;
     margin-bottom: 1em;
 }
+
 select:hover {
     background-color: #9c9c9c;
 }
+
 input {
     border: none;
     color: white;
@@ -90,20 +80,15 @@ input {
     margin-bottom: 1em;
 }
 
-/*input[type="file"]{*/
-/*    display: none;*/
-/*}*/
+input[type="file"]{
+    display: none;
+}
 
 label{
     color: white;
 }
 label:hover{
     background-color: blue;
-}
-
-#copy{
-    text-align: right;
-    color: white;
 }
 
 input[type="checkbox"]#checkbox-b+label {
@@ -120,6 +105,7 @@ input[type="checkbox"]{
     opacity: 0;
     z-index: -1;
 }
+
 input[type="checkbox"]+label{
     width: 20px;
     height: 20px;
@@ -131,4 +117,24 @@ input[type="checkbox"]+label{
     overflow: hidden;
     border: 1px solid red;
     cursor: pointer;
+}
+
+button{
+    font-size: 1em;
+    color: white;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+    margin-bottom: 1em;
+}
+
+button:hover{
+    background-color: blue;
+}
+
+body{
+        background: blue;
 }

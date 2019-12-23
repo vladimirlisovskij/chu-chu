@@ -3,28 +3,28 @@
     <head>
         <meta charset="UTF-8">
         <title>Feed mode</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/feed_style.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     </head>
     <body>
-        <div id="main">
+        <div class="main">
             <h3>codename chu-chu *project name*</h3>
-            <div id="tst">
-                <fieldset id="main_lab">
+            <div class="main-content">
+                <fieldset class="border">
                     <legend align="left">Edit mode</legend>
-                    <div id="tst2">
-                        <div id="feed_info">
+                    <div class="border-content">
+                        <div class="box">
                             <form action="/feed" method="POST" enctype="multipart/form-data">
                                 x frame:
-<!--                                <label class="input_file">-->
+                                <label class="input_file">
                                     <input type="file" name="x_frame">
                                     [choose file]
-<!--                                </label>-->
+                                </label>
                                 <br/>
                                 y frame:
-<!--                                <label class="input_file">-->
+                                <label class="input_file">
                                 <input type="file" name="y_frame">
                                     [choose file]
-<!--                                </label>-->
+                                </label>
                                 <br/><br/>
                                 batch size:
                                 <input name="batch", value="4", maxlength="5", size="5">
@@ -38,7 +38,7 @@
                                 <button value="upload" type="submit">[feed]</button>
                             </form>
                         </div>
-                        <div id = "go_back">
+                        <div class="box">
                              <form action="/modeFeed" method="POST" enctype="multipart/form-data">
                                 <button value="upload" type="submit">[to view mode]</button>
                             </form>
@@ -46,6 +46,8 @@
                     </div>
                 </fieldset>
             </div>
+            <br/><br/><br/>
+            <div class="copy">&copy Vladimir Lisovskij, 2019 <br/> made with <span class="red"><3</span></div>
         </div>
     </body>
 </html>

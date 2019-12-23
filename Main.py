@@ -8,13 +8,19 @@ from keras.backend import set_session
 import tensorflow as tf
 import pandas as pd
 from flask_socketio import SocketIO
+import json
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='./templates')
 socketio = SocketIO(app)
 
 input_shape = (128,)
 
 layers = [{"class_name": "Dense",
+                "config": {"units": 10,
+                           "activation": "relu"
+                           },
+           },
+          {"class_name": "Dense",
                 "config": {"units": 10,
                            "activation": "relu"
                            }
@@ -36,12 +42,113 @@ x_frame = None
 y_frame = None
 val_size = 0
 
+
+@app.route("/ok/<name>")
+def ok(name):
+    global layers, model, mode, loss_name, loss, optimizer_name, optimizer, model, layers, graph, fed, Sess, input_shape
+    if mode == 'edit':
+        asd = json.loads(name)
+        print(asd)
+        layers = []
+        if len(asd) == 0:
+            return redirect(url_for("index"),
+                            code=302)
+        for i in asd[0]:
+            if i[0] == "Dense":
+                layers.append({"class_name": i[0],
+                               "config": {"units": int(i[1]),
+                                          "activation": i[2]
+                                          }
+                               })
+            elif i[0] == "Dropout":
+                layers.append({"class_name": i[0],
+                               "config": {"rate": float(i[1] )}
+                               })
+            elif i[0] == "Conv2D":
+                layers.append({"class_name": i[0],
+                               "config": {"kernel_size": (3, 3),
+                                          "filters": int(i[1]),
+                                          "activation": i[2]
+                                          }
+                               })
+            elif i[0] == "Flatten":
+                layers.append({"class_name": i[0],
+                               "config": {}
+                               })
+            elif i[0] == "MaxPooling2D":
+                layers.append({"class_name": i[0],
+                               "config": {"pool_size": (int(i[1]),
+                                                        int(i[1]))}
+                               })
+        compile_layers = []
+        input_shape = list(map(int, asd[1].split(" ")))
+
+        with graph.as_default():
+            set_session(Sess)
+            loss_name = asd[2]
+
+            if loss_name == "categorical_crossentropy":
+                loss = categorical_crossentropy
+
+            optimizer_name = asd[3]
+            if optimizer_name == "Adadelta":
+                optimizer = Adadelta()
+
+            firs_layer = layers[0]
+            if firs_layer["class_name"] == "Dense":
+                compile_layers.append(Dense(units=firs_layer["config"]["units"],
+                                            activation=firs_layer["config"]["activation"],
+                                            input_shape=input_shape))
+            elif firs_layer["class_name"] == "Dropout":
+                compile_layers.append(Dropout(rate=firs_layer["config"]["rate"],
+                                              input_shape=input_shape))
+            elif firs_layer["class_name"] == "Flatten":
+                compile_layers.append(Flatten(input_shape=input_shape))
+            elif firs_layer["class_name"] == "Conv2D":
+                compile_layers.append(Conv2D(kernel_size=firs_layer["config"]["kernel_size"],
+                                             filters=firs_layer["config"]["filters"],
+                                             activation=firs_layer["config"]["activation"],
+                                             input_shape=input_shape))
+            elif firs_layer["class_name"] == "MaxPoling2D":
+                compile_layers.append(MaxPooling2D(pool_size=firs_layer["config"]["pool_size"],
+                                                   input_shape=input_shape))
+
+            for layer in layers[1:]:
+                if layer["class_name"] == "Dense":
+                    compile_layers.append(Dense(units=layer["config"]["units"],
+                                                activation=layer["config"]["activation"]))
+                elif layer["class_name"] == "Dropout":
+                    compile_layers.append(Dropout(rate=layer["config"]["rate"]))
+                elif layer["class_name"] == "Flatten":
+                    compile_layers.append(Flatten())
+                elif layer["class_name"] == "Conv2D":
+                    compile_layers.append(Conv2D(kernel_size=layer["config"]["kernel_size"],
+                                                 filters=layer["config"]["filters"],
+                                                 activation=layer["config"]["activation"]))
+                elif layer["class_name"] == "MaxPoling2D":
+                    compile_layers.append(MaxPooling2D(pool_size=layer["config"]["pool_size"]))
+
+            model = Sequential(compile_layers)
+            model.compile(optimizer=optimizer,
+                          loss=loss,
+                          metrics=["acc"])
+
+        mode = "view"
+        fed = False
+
+    else:
+        mode = "edit"
+
+    return redirect(url_for("index"),
+                    code=302)
+
+
 @app.route("/loadModel",
            methods=["POST"])
 def get_model():
     global model, graph, Sess, mode, layers
 
-    request.files["load_model"].save("/home/vladimir/PycharmProjects/OPD/files/load_model.h5")
+    # request.files["load_model"].save("/home/canned_dead/Документы/PycharmProjects/OPD/files/load_model.h5")
 
     if mode == "edit":
         mode = "view"
@@ -64,128 +171,14 @@ def save_model():
         set_session(Sess)
         model.save("files/save_model.h5")
 
-    return send_from_directory("/home/vladimir/PycharmProjects/OPD/files", "save_model.h5")
-
-@app.route("/create",
-           methods=["POST"])
-def create():
-    global layers
-
-    layer_type = request.form.get("layer_type")  # выпадающий список
-    layer_neur = request.form.get("neurons")  # текстовое поле
-    layer_activation = request.form.get("activation")  # выпадающий список
-
-    if layer_type == "Dense":
-        layers.append({"class_name": layer_type,
-                            "config": {"units": int(layer_neur),
-                                       "activation": layer_activation
-                                       }
-                            })
-    elif layer_type == "Dropout":
-        layers.append({"class_name": layer_type,
-                            "config": {"rate": float(layer_neur)}
-                            })
-    elif layer_type == "Conv2D":
-        layers.append({"class_name": layer_type,
-                            "config": {"kernel_size": (3, 3),
-                                       "filters": int(layer_neur),
-                                       "activation": layer_activation
-                                       }
-                            })
-    elif layer_type == "Flatten":
-        layers.append({"class_name": layer_type,
-                            "config": {}
-                            })
-    elif layer_type == "MaxPooling2D":
-        layers.append({"class_name": layer_type,
-                            "config": {"pool_size": (int(layer_neur),
-                                                     int(layer_neur))}
-                            })
-
-    return redirect(url_for("index"),
-                    code=302)
-
-
-@app.route("/delete/<int:index>",
-           methods=["POST"])
-def delete(index):
-    global layers
-
-    layers.pop(int(index))
-
-    return redirect(url_for("index"),
-                    code=302)
+    return send_from_directory("/home/canned_dead/Документы/PycharmProjects/OPD/files", "save_model.h5")
 
 
 @app.route("/modeEdit",
            methods=["POST"])
 def change_mode_to_edit():
     global mode, input_shape, loss, loss_name, optimizer, optimizer_name, model, layers, graph, fed, Sess
-
-    if mode == "edit":
-        if not len(layers):
-            return redirect(url_for("index"),
-                            code=302)
-
-        compile_layers = []
-
-        input_shape = list(map(int,
-                               request.form.get("input_shape").split(" ")))
-
-        with graph.as_default():
-            set_session(Sess)
-            loss_name = request.form.get("loss")
-            if loss_name == "categorical_crossentropy":
-                loss = categorical_crossentropy
-
-            optimizer_name = request.form.get("optimizer")
-            if optimizer_name == "Adadelta":
-                optimizer = Adadelta()
-
-            firs_layer = layers[0]
-            if firs_layer["class_name"] == "Dense":
-                compile_layers.append(Dense(units=firs_layer["config"]["units"],
-                                                 activation=firs_layer["config"]["activation"],
-                                                 input_shape=input_shape))
-            elif firs_layer["class_name"] == "Dropout":
-                compile_layers.append(Dropout(rate=firs_layer["config"]["rate"],
-                                                   input_shape=input_shape))
-            elif firs_layer["class_name"] == "Flatten":
-                compile_layers.append(Flatten(input_shape=input_shape))
-            elif firs_layer["class_name"] == "Conv2D":
-                compile_layers.append(Conv2D(kernel_size=firs_layer["config"]["kernel_size"],
-                                                  filters=firs_layer["config"]["filters"],
-                                                  activation=firs_layer["config"]["activation"],
-                                                  input_shape=input_shape))
-            elif firs_layer["class_name"] == "MaxPoling2D":
-                compile_layers.append(MaxPooling2D(pool_size=firs_layer["config"]["pool_size"],
-                                                        input_shape=input_shape))
-
-            for layer in layers[1:]:
-                if layer["class_name"] == "Dense":
-                    compile_layers.append(Dense(units=layer["config"]["units"],
-                                                     activation=layer["config"]["activation"]))
-                elif layer["class_name"] == "Dropout":
-                    compile_layers.append(Dropout(rate=layer["config"]["rate"]))
-                elif layer["class_name"] == "Flatten":
-                    compile_layers.append(Flatten())
-                elif layer["class_name"] == "Conv2D":
-                    compile_layers.append(Conv2D(kernel_size=layer["config"]["kernel_size"],
-                                                      filters=layer["config"]["filters"],
-                                                      activation=layer["config"]["activation"]))
-                elif layer["class_name"] == "MaxPoling2D":
-                    compile_layers.append(MaxPooling2D(pool_size=layer["config"]["pool_size"]))
-
-            model = Sequential(compile_layers)
-            model.compile(optimizer=optimizer,
-                          loss=loss,
-                          metrics=["acc"])
-
-        mode = "view"
-        fed = False
-
-    else:
-        mode = "edit"
+    mode = "edit"
 
     return redirect(url_for("index"),
                     code=302)
@@ -216,10 +209,9 @@ def do_feed():
                 set_session(Sess)
                 hist = model.fit(x=x_frame1[i:i+batch],
                           y=y_frame1[i:i+batch],
-                                 validation_data = (x_val,
-                                                    y_val))
+                         validation_data = (x_val,
+                                            y_val))
 
-            # print(hist.history['acc'])
             socketio.emit("progress", {"text": [str(hist.history['loss'][0]), str(hist.history['val_loss'][0])]}, namespace="/acc")
 
             socketio.emit("progress", {"text":int((1 + i )* per)}, namespace="/iter")
@@ -243,10 +235,10 @@ def feed():
     epochs = int(request.form.get("epochs"))
     val_size = int(request.form.get("val_size"))
 
-    # request.files["x_frame"].save("/home/vladimir/PycharmProjects/OPD/files/x_frame.csv")
+    # request.files["x_frame"].save("/home/canned_dead/Документы/PycharmProjects/OPD/files/x_frame.csv")
     x_frame = pd.read_csv("files/x_frame.csv").to_numpy()
 
-    # request.files["y_frame"].save("/home/vladimir/PycharmProjects/OPD/files/y_frame.csv")
+    # request.files["y_frame"].save("/home/canned_dead/Документы/PycharmProjects/OPD/files/y_frame.csv")
     y_frame = pd.read_csv("files/y_frame.csv").to_numpy()
 
     mode = "feed_load"
@@ -288,15 +280,15 @@ def change_mode_to_predict():
 def predict():
     global model, graph, Sess
 
-    request.files["data"].save("/home/vladimir/PycharmProjects/OPD/files/data.csv")
-    data = pd.read_csv("files/data.csv").to_numpy()
+    # request.files["data"].save("/home/canned_dead/Документы/PycharmProjects/OPD/files/in_data.csv")
+    data = pd.read_csv("files/in_data.csv").to_numpy()
 
     with graph.as_default():
         set_session(Sess)
-        print(model.predict(data))
+        data_df = pd.DataFrame(model.predict(data))
+        data_df.to_csv("files/out_data.csv")
 
-    return redirect(url_for("index"),
-                    code=302)
+    return send_from_directory('/home/canned_dead/Документы/PycharmProjects/OPD/files/', "out_data.csv")
 
 
 @app.route("/",
@@ -305,6 +297,8 @@ def predict():
                     ])
 def index():
     global layers, loss, mode, optimizer, input_shape, bath
+
+    print(mode)
 
     if mode == "edit":
         return render_template("editTemplate.html",
@@ -330,4 +324,4 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, threaded=True)

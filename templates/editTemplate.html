@@ -3,79 +3,77 @@
     <head>
         <meta charset="UTF-8">
         <title>Edit mode</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_style.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     </head>
     <body>
-        <div id="main">
+        <div class="main">
             <h3>codename chu-chu *project name*</h3>
-            <div id="tst">
-                <fieldset id="main_lab">
+            <div class="main-content">
+                <fieldset class="border">
                     <legend align="left">Edit mode</legend>
-                    <div id="tst2">
-                        <div id="layers_info">
+                    <div class="border-content">
+                        <div class="box">
                             <h4>layers</h4>
-                            <form action="/create" method="POST" enctype="multipart/form-data">
-                                <select name="layer_type">
-                                    <option value="Dense">Dense</option>
-                                    <option value="Dropout">Dropout</option>
-                                    <option value="Flatten">Flatten</option>
-                                    <option value="Conv2D">Conv2D</option>
-                                    <option value="MaxPooling2D">MaxPooling2D</option>
-                                </select>
-                                <input name="neurons", value="128", size="5", type="number">
-                                <select name="activation">
-                                    <option value="relu">relu</option>
-                                    <option value="tanh">tang</option>
-                                    <option value="softmax">softmax</option>
-                                </select>
-                                <button value="upload" type="submit">[add layer]</button>
-                            </form>
-                                <ol>
+                            <select name="layer_type" id="layers" onchange="disp()">
+                                <option value="Dense">Dense</option>
+                                <option value="Dropout">Dropout</option>
+                                <option value="Flatten">Flatten</option>
+                                <option value="Conv2D">Conv2D</option>
+                                <option value="MaxPooling2D">MaxPooling2D</option>
+                            </select>
+                            <input name="neurons" value="128" size="5" type="number" id="units">
+                            <select name="activation" id="activation">
+                                <option value="relu">relu</option>
+                                <option value="tanh">tang</option>
+                                <option value="softmax">softmax</option>
+                            </select>
+                            <button value="upload" type="submit" onclick="create(this)">[add layer]</button>
+                            <ol  id="layers_list">
                                 {% for ind in range(len) %}
-                                    <li>
-                                        <form action="/delete/{{ind}}" method="POST" enctype="multipart/form-data">
-                                            <button value="upload" type="submit">[ X ]</button>
-                                            {% if lay[ind]['class_name'] == "Dense" %}
-                                                Dense {{lay[ind]['config']["units"]}} {{lay[ind]['config']["activation"]}}
-                                            {% endif %}
-                                            {% if lay[ind]['class_name'] == "Dropout" %}
-                                                Dropout {{lay[ind]['config']["rate"]}}
-                                            {% endif %}
-                                            {% if lay[ind]['class_name'] == "Conv2D" %}
-                                                Conv2D {{lay[ind]['config']["filters"]}} {{lay[ind]['config']["activation"]}}
-                                            {% endif %}
-                                            {% if lay[ind]['class_name'] == "Flatten" %}
-                                                Flatten
-                                            {% endif %}
-                                            {% if lay[ind]['class_name'] == "MaxPooling2D" %}
-                                                MaxPooling2D {{lay[ind]['config']["pool_size"][0]}}
-                                            {% endif %}
-                                        </form>
-                                    </li>
-                            {% endfor %}
+                                <li id="{{ind}}">
+                                    <div style="display: flex">
+                                        <button>[X]</button>
+                                        <p>
+                                    {% if lay[ind]['class_name'] == "Dense" %}
+                                            Dense {{lay[ind]['config']["units"]}} {{lay[ind]['config']["activation"]}}
+                                    {% endif %}
+                                    {% if lay[ind]['class_name'] == "Dropout" %}
+                                        Dropout {{lay[ind]['config']["rate"]}}
+                                    {% endif %}
+                                    {% if lay[ind]['class_name'] == "Conv2D" %}
+                                            Conv2D {{lay[ind]['config']["filters"]}} {{lay[ind]['config']["activation"]}}
+                                    {% endif %}
+                                    {% if lay[ind]['class_name'] == "Flatten" %}
+                                        Flatten
+                                    {% endif %}
+                                    {% if lay[ind]['class_name'] == "MaxPooling2D" %}
+                                        MaxPooling2D {{lay[ind]['config']["pool_size"][0]}}
+                                    {% endif %}
+                                        </p>
+                                    </div>
+                                </li>
+                                {% endfor %}
                             </ol>
                         </div>
-                        <div id="model_info">
+                        <div class="box">
                             <h4>params</h4>
-                            <form action="/modeEdit" method="POST" enctype="multipart/form-data">
                                 input shape
-                                <input name="input_shape", value="64", size="10", type="number">
+                                <input id="input_shape", value="64", size="10", type="number">
                                 <br/>
                                 loss
-                                <select name="loss">
+                                <select id="loss">
                                     <option value="categorical_crossentropy">categorical_crossentropy</option>
                                 </select>
                                 <br/>
                                 optimizer
-                                <select name="optimizer">
+                                <select id="optimizer">
                                     <option value="Adadelta">Adadelta</option>
                                 </select>
                                 <br/>
-                                <button value="upload" type="submit">[to view mode]</button>
                                 <br/><br/>
-                            </form>
+                                <button onclick="send(this)" id="123    ">[to view mode]</button>
                         </div>
-                        <div id="load_model">
+                        <div class="box">
                             <h4>load model</h4>
                             <form action="/loadModel" method="POST" enctype="multipart/form-data">
                                 <label id="input_file">
@@ -89,7 +87,8 @@
                 </fieldset>
             </div>
             <br/><br/><br/>
-            <div id="copy">&copy Vladimir Lisovskij, 2019 <br/> made with <span id="red"><3</span></div>
+            <div class="copy">&copy Vladimir Lisovskij, 2019 <br/> made with <span class="red"><3</span></div>
         </div>
+        <script src="{{ url_for('static', filename='js/editScript.js') }}"></script>
     </body>
 </html>

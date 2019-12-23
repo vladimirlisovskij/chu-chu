@@ -3,20 +3,22 @@
     <head>
         <meta charset="UTF-8">
         <title>View mode</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/view_style.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     </head>
     <body>
-        <div id="main">
+        <div class="main">
             <h3>codename chu-chu *project name*</h3>
-            <div id="tst">
-                <fieldset>
+            <div class="main-content">
+                <fieldset class="border">
                     <legend align="left">View mode</legend>
-                    <div id="tst2">
-                        <div id="layers_info">
+                    <div class="border-content">
+                        <div class="box">
                         <h4>layers</h4>
                         <ol>
                             {% for layer in layers %}
                                 <li>
+                                    <div style="display: flex">
+                                        <p>
                                     {% if layer['class_name'] == "Dense" %}
                                         Dense {{layer['config']["units"]}} {{layer['config']["activation"]}}
                                     {% endif %}
@@ -32,11 +34,13 @@
                                     {% if layer['class_name'] == "MaxPooling2D" %}
                                         MaxPooling2D {{layer['config']["pool_size"][0]}}
                                     {% endif %}
+                                        </p>
+                                    </div>
                                 </li>
                             {% endfor %}
                         </ol>
                     </div>
-                        <div id="model_info">
+                        <div class="box">
                         <h4>model params</h4>
                         input shape: {{input_shape}}
                         <br/>
@@ -44,7 +48,7 @@
                         <br/>
                         optimizer: {{optimizer}}
                     </div>
-                        <div id="action_buttons">
+                    <div class="box">
                         <form action="/saveModel" method="POST" enctype="multipart/form-data">
                             <button value="upload" type="submit">[save model]</button>
                         </form>
@@ -62,7 +66,7 @@
                 </fieldset>
             </div>
             <br/><br/><br/>
-            <div id="copy">&copy Vladimir Lisovskij, 2019 <br/> made with <span id="red"><3</span></div>
+            <div class="copy">&copy Vladimir Lisovskij, 2019 <br/> made with <span class="red"><3</span></div>
         </div>
     </body>
 </html>

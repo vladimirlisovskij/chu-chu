@@ -3,18 +3,35 @@
     <head>
         <meta charset="UTF-8">
         <title>Predict mode</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     </head>
     <body>
-        <center>
-            <form action="/predict" method="POST" enctype="multipart/form-data">
-                data:
-                <input type="file" name="data">
-                <button value="upload" type="submit">feed</button>
-            </form>
-            <br/>
-            <form action="/modePredict" method="POST" enctype="multipart/form-data">
-                <button value="upload" type="submit">to view mode</button>
-            </form>
-        </center>
+        <div class = "main">
+            <h3>codename chu-chu *project name*</h3>
+            <div class="main-content">
+                <fieldset class="border">
+                    <legend align="left">[Predict mode]</legend>
+                    <div class="border-content">
+                        <div class="box">
+                            <form action="/predict" method="POST" enctype="multipart/form-data">
+                                data:
+                                <label class="input_file">
+                                    <input type="file" name="data">
+                                    [choose file]
+                                </label>
+                                <button value="upload" type="submit">[predict]</button>
+                            </form>
+                        </div>
+                        <div class="box">
+                            <form action="/modePredict" method="POST" enctype="multipart/form-data">
+                                <button value="upload" type="submit">[to view mode]</button>
+                            </form>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <br/><br/><br/>
+            <div class="copy">&copy Vladimir Lisovskij, 2019 <br/> made with <span class="red"><3</span></div>
+        </div>
     </body>
 </html>
